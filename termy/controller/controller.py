@@ -1,16 +1,31 @@
 import argparse
+import sys
 
-# from termy import parser
-parser = argparse.ArgumentParser(add_help=False,
-                                 description='Termy is a terminal assistant which is focussed on easing out the '
-                                             'developers life, by triggering commands just bsaed on the NLI')
-from termy.service.service import configure_termy
+from termy.service.service import configure_termy, search_and_execute, update_termy
 
-parser.add_argument("-c", "--configure", type=configure_termy, action="store", help="Configure your termy")
-parser.add_argument("-u", "--update", dest="update", help="Update termy to be updated with the latest commands")
-parser.add_argument("-s", "--search", dest="search", help="termy will help you to search !!")
-parser.add_argument("-show", "--show_configurations", dest="show_configurations", help="View the termy configs")
-parser.add_argument("-h", "--help", action="help",
-                    help="Termy will ease your job and help you to run any command using NLI")
-args = parser.parse_args()
-print("args", args)
+
+def init_cli_app():
+    parser = argparse.ArgumentParser(add_help=False,
+                                     description='Termy is a terminal assistant which is focussed on easing out the '
+                                                 'developers life, by triggering commands just based on the Natural language')
+
+    parser.add_argument('search', help='Input String', nargs='*')
+    parser.add_argument("-c", "--configure", action='store_true', help="Configure your termy")
+    parser.add_argument("--show-config", action='store_true', help="Shows the current configurations")
+    parser.add_argument("-u", "--update", action='store_true',
+                        help="Update termy to be updated with the latest commands")
+    args = parser.parse_args()
+
+    if args.search:
+        query = ' '.join(args.search)
+        search_and_execute(query)
+    elif args.configure:
+        configure_termy()
+    elif args.update:
+        update_termy()
+    else:
+        parser.print_help(sys.stdout)
+
+
+if __name__ == '__main__':
+    init_cli_app()
