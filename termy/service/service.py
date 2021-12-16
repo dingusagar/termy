@@ -4,7 +4,7 @@ import pandas as pd
 from rapidfuzz import process, fuzz
 
 
-def configure_termy(a):
+def configure_termy():
     print('Configuration')
     api_key = input('Please enter the API_KEY for the google sheet that contains the commands data : ')
     doc_id = input('Please enter the DOC Key for the google sheet that contains the commands data : ')

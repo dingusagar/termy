@@ -22,6 +22,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'pandas==1.3.5',
+        'rapidfuzz==1.9.1'
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[
