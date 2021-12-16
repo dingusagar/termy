@@ -3,11 +3,17 @@ import sys
 
 from termy.service.service import configure_termy, search_and_execute, update_termy
 
+DESCRIPTION = '''
+Termy is a terminal assistant which is focussed on easing out the developers life
+by triggering commands just based on the Natural language.
+
+If you have any feedbacks on this tool, please use this form : https://forms.gle/8sHNPD9PNyVupFht8
+You can also visit our github page and raise issues there. : https://github.com/dingusagar/termy
+'''
 
 def init_cli_app():
     parser = argparse.ArgumentParser(add_help=False,
-                                     description='Termy is a terminal assistant which is focussed on easing out the '
-                                                 'developers life, by triggering commands just based on the Natural language')
+                                     description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument('search', help='Input String', nargs='*')
     parser.add_argument("-c", "--configure", action='store_true', help="Configure your termy")
