@@ -22,7 +22,10 @@ setup(
     packages=find_packages(),
     install_requires=[
         'pandas==1.3.5',
-        'rapidfuzz==1.9.1'
+        'rapidfuzz==1.9.1',
+        'google-api-python-client==2.33.0',
+        'google-auth-httplib2==0.1.0',
+        'google-auth-oauthlib==0.4.6',
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[

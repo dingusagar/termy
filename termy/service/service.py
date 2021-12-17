@@ -1,19 +1,31 @@
 import os
-from termy.config import TERMY_DIR, TERMY_COMMANDS_FILE, MATCH_THRESHOLD
+from termy.constants import TERMY_DIR, TERMY_COMMANDS_FILE, MATCH_THRESHOLD
 import pandas as pd
 from rapidfuzz import process, fuzz
 
+from termy.service.AuthGoogle import google_auth
+from termy.service.get_sheet_content import get_sheet_content_into_csv
+
+creds = None
+sheet_id = None
+sheet_name = None
 
 def configure_termy():
+    global creds
+    global sheet_name
+    global sheet_id
     print('Configuration')
-    api_key = input('Please enter the API_KEY for the google sheet that contains the commands data : ')
-    doc_id = input('Please enter the DOC Key for the google sheet that contains the commands data : ')
-    print(f'Configuring API_KEY = {api_key} , DOC_KEY : {doc_id}')
-
+    sheet_id = input('Please enter the Sheet ID for the google sheet that contains the commands data : ')
+    sheet_name = input('Please enter the Sheet Name for the google sheet that contains the commands data : ')
+    print(f'Configuring , DOC_KEY : {sheet_id}')
+    creds = google_auth()
+    print(creds)
+    update_termy()
 
 
 def update_termy():
-    print('update yet to be supported')
+    print('updating data...')
+    get_sheet_content_into_csv(sheet_id, sheet_name, creds)
 
 
 def execute_command(command):
@@ -48,3 +60,7 @@ def show_configs():
 def load_commands_and_queries():
     df = pd.read_csv(TERMY_COMMANDS_FILE)
     return list(df['commands']), list(df['query'])
+
+
+if __name__ == '__main__':
+    configure_termy()
