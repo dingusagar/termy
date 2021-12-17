@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.1'
+VERSION = '0.0.3'
 DESCRIPTION = 'A lightweight terminal assistant to give a natural language interface to your terminal commands'
 
 # Setting up
@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
     packages=find_packages(),
     install_requires=[
-        'pandas==1.3.5',
+        'pandas',
         'rapidfuzz==1.9.1',
         'google-api-python-client==2.33.0',
         'google-auth-httplib2==0.1.0',
