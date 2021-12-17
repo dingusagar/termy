@@ -6,6 +6,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 from termy.constants import TOKEN_JSON, SCOPES, CREDENTIALS_JSON
 
+
 def google_auth():
     creds = None
     if os.path.exists(TOKEN_JSON):
@@ -22,4 +23,3 @@ def google_auth():
             token.write(creds.to_json())
 
     return creds
-

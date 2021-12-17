@@ -1,45 +1,60 @@
+import json
 import os
-from termy.constants import TERMY_DIR, TERMY_COMMANDS_FILE, MATCH_THRESHOLD
+import pickle
+
 import pandas as pd
+from colorama import Fore
 from rapidfuzz import process, fuzz
 
+from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, SHEET_NAME
 from termy.service.AuthGoogle import google_auth
 from termy.service.get_sheet_content import get_sheet_content_into_csv
+from termy.utils import save_object
 
 creds = None
 sheet_id = None
 sheet_name = None
 
+
 def configure_termy():
     global creds
     global sheet_name
     global sheet_id
-    print('Configuration')
-    sheet_id = input('Please enter the Sheet ID for the google sheet that contains the commands data : ')
-    sheet_name = input('Please enter the Sheet Name for the google sheet that contains the commands data : ')
-    print(f'Configuring , DOC_KEY : {sheet_id}')
+    print(Fore.YELLOW + 'Configuration')
+    sheet_id = input(
+        Fore.LIGHTCYAN_EX + 'Please enter the Sheet ID for the google sheet that contains the commands data : ')
+    sheet_name = input(
+        Fore.LIGHTCYAN_EX + 'Please enter the Sheet Name for the google sheet that contains the commands data : ')
+    config = {"sheet_id": sheet_id, "sheet_name": sheet_name}
+    with open(CONFIG, 'w') as f:
+        json.dump(config, f)
+    print(Fore.GREEN + f'Configuring , DOC_KEY : {sheet_id}')
     creds = google_auth()
-    print(creds)
+    save_object(creds, CREDS_OBJECT_FILE)
     update_termy()
 
 
 def update_termy():
-    print('updating data...')
-    get_sheet_content_into_csv(sheet_id, sheet_name, creds)
+    print(Fore.LIGHTYELLOW_EX + 'updating data...')
+    with open(CREDS_OBJECT_FILE, 'rb') as config_dictionary_file:
+        creds = pickle.load(config_dictionary_file)
+    with open(CONFIG, 'r') as f:
+        config = json.load(f)
+    get_sheet_content_into_csv(config.get("sheet_id"), config.get("sheet_name", SHEET_NAME), creds)
 
 
 def execute_command(command):
-    print(f'Detected Command : {command}')
-    user_input = input(f'Press enter to execute')
+    print(Fore.LIGHTMAGENTA_EX + f'Detected Command : {command}')
+    user_input = input(Fore.LIGHTCYAN_EX + f'Press enter to execute')
     if user_input in ['n', 'no', 'c', 'cancel']:
-        print('Abort..')
+        print(Fore.RED + 'Abort..')
     else:
-        print('Executing command...')
+        print(Fore.GREEN + 'Executing command...')
         os.system(command)
 
 
 def search_and_execute(search_text):
-    print(f'search : {search_text}')
+    print(Fore.LIGHTCYAN_EX + f'search : {search_text}')
     commands, queries = load_commands_and_queries()
     match = process.extractOne(search_text, queries, scorer=fuzz.token_set_ratio)
     if match:
@@ -48,9 +63,9 @@ def search_and_execute(search_text):
             command = commands[index]
             execute_command(command)
         else:
-            print('No match found :(')
+            print(Fore.RED + 'No match found :(')
     else:
-        print('No match found :(')
+        print(Fore.RED + 'No match found :(')
 
 
 def show_configs():
