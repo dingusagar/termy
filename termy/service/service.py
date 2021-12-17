@@ -62,8 +62,10 @@ def search_and_execute(search_text):
             execute_command(command)
         else:
             print(Fore.RED + 'No match found :(')
+            print(Fore.RED + 'Try adding the query and command to the Sheet and do termy --update')
     else:
         print(Fore.RED + 'No match found :(')
+        print(Fore.RED + 'Try adding the query and command to the Sheet and do termy --update')
 
 
 def show_configs():
