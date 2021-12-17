@@ -2,8 +2,9 @@ import argparse
 import sys
 
 from termy.service.service import configure_termy, search_and_execute, update_termy
+from colorama import Fore
 
-DESCRIPTION = '''
+DESCRIPTION = Fore.LIGHTYELLOW_EX + '''
 Termy is a terminal assistant which is focussed on easing out the developers life
 by triggering commands just based on the Natural language.
 
