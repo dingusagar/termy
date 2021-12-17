@@ -2,6 +2,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/python,macos,pycharm,linux
 # Edit at https://www.toptal.com/developers/gitignore?templates=python,macos,pycharm,linux
 
+termy/resources/config.json
+termy/resources/creds.pkl
+termy/resources/tokens.json
 ### Linux ###
 *~
 

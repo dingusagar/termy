@@ -20,22 +20,22 @@ def configure_termy():
     global creds
     global sheet_name
     global sheet_id
-    print(Fore.YELLOW + 'Configuration')
     sheet_id = input(
         Fore.LIGHTCYAN_EX + 'Please enter the Sheet ID for the google sheet that contains the commands data : ')
     sheet_name = input(
-        Fore.LIGHTCYAN_EX + 'Please enter the Sheet Name for the google sheet that contains the commands data : ')
+        Fore.LIGHTCYAN_EX + "Please enter the Sheet Name for the google sheet that contains the commands data (default : 'Sheet1'): ")
+    if not sheet_name:
+        sheet_name = 'Sheet1'
     config = {"sheet_id": sheet_id, "sheet_name": sheet_name}
     with open(CONFIG, 'w') as f:
         json.dump(config, f)
-    print(Fore.GREEN + f'Configuring , DOC_KEY : {sheet_id}')
+    print(Fore.LIGHTGREEN_EX + f'Configuring Termy...')
     creds = google_auth()
     save_object(creds, CREDS_OBJECT_FILE)
     update_termy()
 
 
 def update_termy():
-    print(Fore.LIGHTYELLOW_EX + 'updating data...')
     with open(CREDS_OBJECT_FILE, 'rb') as config_dictionary_file:
         creds = pickle.load(config_dictionary_file)
     with open(CONFIG, 'r') as f:
@@ -44,17 +44,15 @@ def update_termy():
 
 
 def execute_command(command):
-    print(Fore.LIGHTMAGENTA_EX + f'Detected Command : {command}')
-    user_input = input(Fore.LIGHTCYAN_EX + f'Press enter to execute')
+    print(Fore.LIGHTCYAN_EX + f'Detected Command : {command}')
+    user_input = input(Fore.LIGHTCYAN_EX + f'Press enter to execute' + Fore.RESET)
     if user_input in ['n', 'no', 'c', 'cancel']:
         print(Fore.RED + 'Abort..')
     else:
-        print(Fore.GREEN + 'Executing command...')
         os.system(command)
 
 
 def search_and_execute(search_text):
-    print(Fore.LIGHTCYAN_EX + f'search : {search_text}')
     commands, queries = load_commands_and_queries()
     match = process.extractOne(search_text, queries, scorer=fuzz.token_set_ratio)
     if match:

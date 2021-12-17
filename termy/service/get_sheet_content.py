@@ -26,8 +26,9 @@ def get_sheet_content_into_csv(SAMPLE_SPREADSHEET_ID, SAMPLE_RANGE_NAME, creds):
             os.remove(TERMY_COMMANDS_FILE)
         file_with_commands = open(TERMY_COMMANDS_FILE, 'w')
         writer = csv.writer(file_with_commands)
-        for row in tqdm(values, desc="Updating Data ...", colour=Fore.LIGHTGREEN_EX):
+        for row in tqdm(values, desc="Updating Data ", colour='#32CD32'):
             writer.writerow(row)
         file_with_commands.close()
+        print(Fore.LIGHTCYAN_EX + f'Saving data at {TERMY_COMMANDS_FILE}')
     except HttpError as err:
         print(err)

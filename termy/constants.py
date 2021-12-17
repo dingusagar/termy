@@ -13,6 +13,6 @@ app_root = os.path.dirname(__file__)
 CREDENTIALS_JSON = os.path.join(app_root, 'resources/credentials.json')
 
 TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
-CREDS_OBJECT_FILE = os.path.join(app_root, "creds.pkl")
-CONFIG = os.path.join(app_root, "config.json")
+CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
+CONFIG = os.path.join(app_root, "resources/config.json")
 SHEET_NAME = "Sheet1"

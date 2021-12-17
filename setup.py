@@ -27,6 +27,7 @@ setup(
         'google-auth-httplib2==0.1.0',
         'google-auth-oauthlib==0.4.6',
         'colorama==0.4.4',
+        'tqdm==4.62.3',
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[
