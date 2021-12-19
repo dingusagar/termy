@@ -7,7 +7,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.4'
+VERSION = '0.0.5'
 DESCRIPTION = 'A lightweight terminal assistant to give a natural language interface to your terminal commands'
 
 # Setting up
@@ -15,11 +15,12 @@ setup(
     name="termy",
     version=VERSION,
     author="Dingu Sagar, Bhanu Rekha, Divya Priya",
-    author_email="<dingusagar@gmail.com>",
+    author_email="<termydbd@gmail.com>",
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
-    packages=find_packages(),
+    packages=find_packages(include=('termy',)),
+    include_package_data=True,
     install_requires=[
         'pandas',
         'rapidfuzz',
@@ -28,6 +29,7 @@ setup(
         'google-auth-oauthlib',
         'colorama',
         'tqdm',
+        'cryptography'
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[

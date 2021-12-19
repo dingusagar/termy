@@ -5,7 +5,7 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 
 from termy.constants import TOKEN_JSON, SCOPES
-import termy.utils as utils
+from termy.utils.tt import log_s5864
 
 
 def google_auth():
@@ -17,7 +17,7 @@ def google_auth():
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_config(
-                utils.log_au_2983(), SCOPES)
+                log_s5864(), SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open(TOKEN_JSON, 'w') as token:
