@@ -6,4 +6,4 @@ google-auth-oauthlib==0.4.6
 colorama==0.4.4
 tqdm==4.62.3
 twine==3.7.1
-pyarmor==7.2.3
+cryptography==36.0.1

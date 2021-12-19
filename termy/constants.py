@@ -6,7 +6,7 @@ TERMY_DIR = Path.home() / APP_NAME
 # TERMY_DIR = Path('/media/dingusagar/Data/HobbyStuffs/termy/data')
 TERMY_COMMANDS_FILE = TERMY_DIR / 'commands.csv'
 
-MATCH_THRESHOLD = 80
+MATCH_THRESHOLD = 60
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 app_root = os.path.dirname(__file__)
