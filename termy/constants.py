@@ -31,7 +31,7 @@ by triggering commands just based on the Natural language.
 To get started:
 Configure termy using ''' + Fore.LIGHTGREEN_EX + '''termy --configure .''' + Fore.LIGHTYELLOW_EX + '''This will connect termy to your google sheet containg commands.
 Once configuration is done, you can search using''' + Fore.LIGHTGREEN_EX + ''' termy <search_text> ''' + \
-                      Fore.LIGHTYELLOW_EX + '''\nYou can aslo visit https://pypi.org/project/termy/ for more details \n\nIf you have any feedbacks on this tool, please use this form : https://forms.gle/8sHNPD9PNyVupFht8
+                      Fore.LIGHTYELLOW_EX + '''\nYou can also visit https://pypi.org/project/termy/ for more details \n\nIf you have any feedbacks on this tool, please use this form : https://forms.gle/8sHNPD9PNyVupFht8
 You can also visit our github page and raise issues there. : https://github.com/dingusagar/termy
 '''
 AUTHENTICATE_ERROR = "Failed to authenticate google sheets integration"
@@ -44,6 +44,3 @@ How to find your sheet id ?
 Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1fay4_aSiHmFXAkbu9C9QZguPf8kF-SbosnltAitPago{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
 
 Enter the Sheet ID for your google sheet : {Fore.RESET}'''
-
-
-print(TERMY_INTRO_MESSAGE)
