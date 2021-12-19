@@ -29,7 +29,8 @@ setup(
         'google-auth-oauthlib',
         'colorama',
         'tqdm',
-        'cryptography'
+        'cryptography',
+        'art'
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[

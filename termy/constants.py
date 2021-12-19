@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
-from colorama import Fore
+from colorama import Fore, Back
+import art
 
 APP_NAME = 'termy'
 TERMY_DIR = Path.home() / APP_NAME
@@ -19,7 +20,9 @@ TERMY_CONFIGURE_MESSAGE = Fore.RED + "Termy is not yet configured \n" + Fore.YEL
                           "Please configure it using " + Fore.GREEN + "termy --configure"
 SERVER_ERROR = Fore.RED + "Unable to find the server at sheets.googleapis.com. Please check your connection!"
 HTPP_SHEET_ERROR = Fore.RED + "Sheet could not be parsed. Please check if Sheet ID and Sheet Name is correct"
-TERMY_INTRO_MESSAGE = Fore.LIGHTYELLOW_EX + '''
+TERMY_BANNER = art.text2art("Termy")
+TERMY_INTRO_MESSAGE = Fore.LIGHTYELLOW_EX + f'''
+{TERMY_BANNER}
 Termy is a terminal assistant which is focussed on easing out the developers life
 by triggering commands just based on the Natural language.
 
@@ -33,3 +36,15 @@ Once configuration is done, you can search using''' + Fore.LIGHTGREEN_EX + ''' t
 You can also visit our github page and raise issues there. : https://github.com/dingusagar/termy
 '''
 AUTHENTICATE_ERROR = "Failed to authenticate google sheets integration"
+
+
+SHEET_ID_INPUT_MESSAGE = f'''{Fore.LIGHTCYAN_EX}
+Termy needs the sheet id of your google sheet link.
+
+How to find your sheet id ?
+Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1fay4_aSiHmFXAkbu9C9QZguPf8kF-SbosnltAitPago{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
+
+Enter the Sheet ID for your google sheet : {Fore.RESET}'''
+
+
+print(TERMY_INTRO_MESSAGE)

@@ -8,7 +8,7 @@ from colorama import Fore
 from rapidfuzz import process, fuzz
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, SHEET_NAME, \
-    TERMY_CONFIGURE_MESSAGE
+    TERMY_CONFIGURE_MESSAGE, SHEET_ID_INPUT_MESSAGE
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.utils import save_object, apply_color_and_rest
@@ -22,11 +22,10 @@ def configure_termy():
     global creds
     global sheet_name
     global sheet_id
-    sheet_id = input(apply_color_and_rest(Fore.LIGHTCYAN_EX,'Please enter the Sheet ID for the google '
-                                                            'sheet that contains the commands data : '))
+    sheet_id = input(SHEET_ID_INPUT_MESSAGE)
     sheet_name = input(apply_color_and_rest(Fore.LIGHTCYAN_EX,
                                             "Please enter the Sheet Name for the google sheet that "
-                                            "contains the commands data (default : 'Sheet1'): "))
+                                            "contains the commands data (Press enter for default : 'Sheet1'): "))
     if not sheet_name:
         sheet_name = 'Sheet1'
     config = {"sheet_id": sheet_id, "sheet_name": sheet_name}

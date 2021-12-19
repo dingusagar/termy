@@ -7,3 +7,4 @@ colorama==0.4.4
 tqdm==4.62.3
 twine==3.7.1
 cryptography==36.0.1
+art==5.3
