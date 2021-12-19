@@ -20,8 +20,7 @@ setup(
     description=DESCRIPTION,
     long_description_content_type="text/markdown",
     long_description=long_description,
-    packages=find_packages(include=('termy',)),
-    include_package_data=True,
+    packages=find_packages(),
     install_requires=[
         'pandas',
         'rapidfuzz',

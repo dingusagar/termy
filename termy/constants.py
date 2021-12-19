@@ -14,7 +14,7 @@ CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 CONFIG = os.path.join(app_root, "resources/config.json")
 SHEET_NAME = "Sheet1"
 
-VERSION = '0.0.5'
+VERSION = '0.0.6'
 
 MATCH_THRESHOLD = 60
 
