@@ -2,12 +2,13 @@ from setuptools import setup, find_packages
 import codecs
 import os
 
+from termy.constants import VERSION
+
 here = os.path.abspath(os.path.dirname(__file__))
 
 with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
     long_description = "\n" + fh.read()
 
-VERSION = '0.0.5'
 DESCRIPTION = 'A lightweight terminal assistant to give a natural language interface to your terminal commands'
 
 # Setting up
