@@ -15,14 +15,20 @@ def init_cli_app():
     parser.add_argument('search', help='Input String', nargs='*')
     parser.add_argument("-c", "--configure", action='store_true', help="Configure your termy")
     parser.add_argument("--show-config", action='store_true', help="Shows the current configurations")
-    parser.add_argument("--gpt3", action='store', help="Give the query in natural language to get terminal command from GPT-3 API")
+    parser.add_argument("--gpt3", action='store_true', help="Give the query in natural language to get terminal command from GPT-3 API")
     parser.add_argument("-u", "--update", action='store_true',
                         help="Update termy to be updated with the latest commands")
     parser.add_argument("-v", "--version", action='store_true',
                         help="Version Info")
     args = parser.parse_args()
 
-    if args.search:
+    if args.gpt3: # gpt3 search query
+        if args.search:
+            query = ' '.join(args.search)
+        else:
+            query = ''
+        resolve_command_from_GPT3(query)
+    elif args.search: # regular search query
         query = ' '.join(args.search)
         search_and_execute(query)
     elif args.configure:
