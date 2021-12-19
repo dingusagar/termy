@@ -43,3 +43,14 @@ How to find your sheet id ?
 Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
 
 Enter the Sheet ID for your google sheet : {Fore.RESET}'''
+
+SHEET_LINK_INPUT = f'''{Fore.LIGHTCYAN_EX}
+Termy needs the google sheet link where the commands and queries are stored.
+
+Your google sheet should follow the same format as this sample sheet : https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0  
+
+Paste your google sheet link here : {Fore.RESET}'''
+
+INVALID_SHEET_LINK = f'''{Fore.RED}Invalid Sheet Link.
+Google sheet link should look something like this : https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0
+Try again with the proper sheet link. {Fore.RESET}'''
