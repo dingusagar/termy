@@ -69,12 +69,12 @@ def search_and_execute(search_text):
             print(apply_color_and_rest(Fore.RED, 'No match found :('))
             print(apply_color_and_rest(Fore.RED,
                                        'Try adding the query and command to the Sheet and do'
-                                       + Fore.GREEN + 'termy --update'))
+                                       + Fore.GREEN + ' termy --update'))
     else:
         print(apply_color_and_rest(Fore.RED, 'No match found :('))
         print(apply_color_and_rest(Fore.RED,
                                    'Try adding the query and command to the Sheet and do '
-                                   + Fore.GREEN + 'termy --update'))
+                                   + Fore.GREEN + ' termy --update'))
 
 
 def show_configs():

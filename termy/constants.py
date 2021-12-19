@@ -36,11 +36,10 @@ You can also visit our github page and raise issues there. : https://github.com/
 '''
 AUTHENTICATE_ERROR = "Failed to authenticate google sheets integration"
 
-
 SHEET_ID_INPUT_MESSAGE = f'''{Fore.LIGHTCYAN_EX}
 Termy needs the sheet id of your google sheet link.
 
 How to find your sheet id ?
-Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1fay4_aSiHmFXAkbu9C9QZguPf8kF-SbosnltAitPago{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
+Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
 
 Enter the Sheet ID for your google sheet : {Fore.RESET}'''
