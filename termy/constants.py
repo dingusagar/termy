@@ -13,6 +13,8 @@ CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 CONFIG = os.path.join(app_root, "resources/config.json")
 SHEET_NAME = "Sheet1"
 
+VERSION = '0.0.5'
+
 MATCH_THRESHOLD = 60
 
 TERMY_CONFIGURE_MESSAGE = Fore.RED + "Termy is not yet configured \n" + Fore.YELLOW + \
