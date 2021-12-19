@@ -12,6 +12,7 @@ CREDENTIALS_JSON = os.path.join(app_root, 'resources/credentials.json')
 TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
 CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 CONFIG = os.path.join(app_root, "resources/config.json")
+GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
 VERSION = '0.0.6'
@@ -43,3 +44,8 @@ How to find your sheet id ?
 Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
 
 Enter the Sheet ID for your google sheet : {Fore.RESET}'''
+
+GPT3_API_KEY_INPUT = f'''{Fore.LIGHTCYAN_EX}
+Need API Key for querying to GPT-3. If you dont have one, sign up for an account and get it by clicking the link here https://beta.openai.com/account/api-keys 
+
+API KEY :{Fore.RESET} '''

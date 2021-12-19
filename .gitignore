@@ -5,6 +5,7 @@
 termy/resources/config.json
 termy/resources/creds.pkl
 termy/resources/tokens.json
+termy/resources/gpt3_config.json
 obfuscate/*
 ### Linux ###
 *~

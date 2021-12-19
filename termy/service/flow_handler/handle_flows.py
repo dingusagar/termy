@@ -11,6 +11,7 @@ from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_F
     TERMY_CONFIGURE_MESSAGE, SHEET_ID_INPUT_MESSAGE
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
+from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
 from termy.utils import save_object, apply_color_and_rest
 
 creds = None
@@ -87,6 +88,16 @@ def load_commands_and_queries():
         return list(df['commands']), list(df['query'])
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
+
+
+def resolve_command_from_GPT3(query):
+    client = GPT3TerminalClient()
+    command = client.get_command(query)
+    if command:
+        execute_command(command)
+    else:
+        print(apply_color_and_rest(Fore.RED, 'No match found :('))
+
 
 
 if __name__ == '__main__':
