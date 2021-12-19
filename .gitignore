@@ -5,6 +5,7 @@
 termy/resources/config.json
 termy/resources/creds.pkl
 termy/resources/tokens.json
+obfuscate/*
 ### Linux ###
 *~
 
