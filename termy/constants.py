@@ -12,6 +12,7 @@ CREDENTIALS_JSON = os.path.join(app_root, 'resources/credentials.json')
 TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
 CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 CONFIG = os.path.join(app_root, "resources/config.json")
+GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
 VERSION = '0.0.6'
@@ -54,3 +55,8 @@ Paste your google sheet link here : {Fore.RESET}'''
 INVALID_SHEET_LINK = f'''{Fore.RED}Invalid Sheet Link.
 Google sheet link should look something like this : https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0
 Try again with the proper sheet link. {Fore.RESET}'''
+
+GPT3_API_KEY_INPUT = f'''{Fore.LIGHTCYAN_EX}
+Need API Key for querying to GPT-3. If you dont have one, sign up for an account and get it by clicking the link here https://beta.openai.com/account/api-keys 
+
+API KEY :{Fore.RESET} '''

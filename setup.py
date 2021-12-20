@@ -30,7 +30,8 @@ setup(
         'colorama',
         'tqdm',
         'cryptography',
-        'art'
+        'art',
+        'openai',
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[
