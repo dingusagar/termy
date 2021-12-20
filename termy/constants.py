@@ -17,7 +17,7 @@ SHEET_NAME = "Sheet1"
 
 VERSION = '0.0.7'
 
-MATCH_THRESHOLD = 70
+MATCH_THRESHOLD = 60
 
 TERMY_CONFIGURE_MESSAGE = Fore.RED + "Termy is not yet configured \n" + Fore.YELLOW + \
                           "Please configure it using " + Fore.GREEN + "termy --configure"

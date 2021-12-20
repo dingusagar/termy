@@ -68,13 +68,36 @@ def remove_stopwords(query):
     return ' '.join(tokens)
 
 
+def rank_matches(matches, search_text):
+    highest_score = matches[0][1]
+    if highest_score < MATCH_THRESHOLD: # low threshold, skip reranking
+        return matches[0]
+
+    # reranking logic based on min number of tokens not matched.
+    tokens_not_matched_counts = []
+    for match in matches[:10]:
+        match_score = match[1]
+        if match_score != highest_score:
+            break
+        matched_query = match[0]
+        tokens_not_matched_count = 0
+        for token in matched_query.split():
+            if token not in search_text:
+                tokens_not_matched_count += 1
+        tokens_not_matched_counts.append(tokens_not_matched_count)
+
+    best_match_index = tokens_not_matched_counts.index(min(tokens_not_matched_counts))
+    return matches[best_match_index]
+
+
 def search_and_execute(search_text):
     commands, queries = load_commands_and_queries()
     search_text = remove_stopwords(search_text)
-    match = process.extractOne(search_text, queries, scorer=fuzz.partial_ratio)
-    if match:
+    matches = process.extract(search_text, queries, scorer=fuzz.token_set_ratio)
+    if matches:
+        match = rank_matches(matches, search_text)
         match_query, score, index = match
-        if score > MATCH_THRESHOLD:
+        if score >= MATCH_THRESHOLD:
             command = commands[index]
             execute_command(command)
         else:
