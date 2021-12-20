@@ -8,7 +8,7 @@ from colorama import Fore
 from rapidfuzz import process, fuzz
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, SHEET_NAME, \
-    TERMY_CONFIGURE_MESSAGE, SHEET_ID_INPUT_MESSAGE, SHEET_LINK_INPUT, INVALID_SHEET_LINK
+    TERMY_CONFIGURE_MESSAGE, SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
@@ -62,10 +62,16 @@ def execute_command(command):
     else:
         os.system(command)
 
+def remove_stopwords(query):
+    tokens = query.split()
+    tokens = [token for token in tokens if not token in STOPWORDS]
+    return ' '.join(tokens)
+
 
 def search_and_execute(search_text):
     commands, queries = load_commands_and_queries()
-    match = process.extractOne(search_text, queries, scorer=fuzz.token_set_ratio)
+    search_text = remove_stopwords(search_text)
+    match = process.extractOne(search_text, queries, scorer=fuzz.partial_ratio)
     if match:
         match_query, score, index = match
         if score > MATCH_THRESHOLD:
@@ -90,7 +96,14 @@ def show_configs():
 def load_commands_and_queries():
     try:
         df = pd.read_csv(TERMY_COMMANDS_FILE)
-        return list(df['commands']), list(df['query'])
+        commands, queries = list(df['commands']), list(df['query'])
+        final_commands, final_queries = [], []
+        for i, query in enumerate(queries):
+            query_variations = query.split('\n')
+            query_variations = [variation for variation in query_variations if variation]
+            final_queries.extend(query_variations)
+            final_commands.extend([commands[i]] * len(query_variations))
+        return final_commands, final_queries
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
 
