@@ -15,7 +15,7 @@ CONFIG = os.path.join(app_root, "resources/config.json")
 GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
-VERSION = '0.0.8'
+VERSION = '0.0.9'
 
 MATCH_THRESHOLD = 60
 

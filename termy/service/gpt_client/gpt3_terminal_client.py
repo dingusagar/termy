@@ -1,4 +1,5 @@
 import json
+import os
 import sqlite3
 import sys
 
@@ -103,6 +104,8 @@ class GPT3TerminalClient:
         return result.strip()
 
     def load_api_key_from_config(self):
+        if not os.path.exists(GPT3_CONFIG):
+            return None
         with open(GPT3_CONFIG, 'r') as file:
             config = json.load(file)
         return config.get('GPT3_API_KEY', None)
