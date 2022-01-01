@@ -7,8 +7,8 @@ import pandas as pd
 from colorama import Fore
 from rapidfuzz import process, fuzz
 
-from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, SHEET_NAME, \
-    TERMY_CONFIGURE_MESSAGE, SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS
+from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
+    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
@@ -16,12 +16,10 @@ from termy.utils import save_object, apply_color_and_rest
 
 creds = None
 sheet_id = None
-sheet_name = None
 
 
 def configure_termy():
     global creds
-    global sheet_name
     global sheet_id
     sheet_link = input(SHEET_LINK_INPUT)
     link_parts = sheet_link.split('/')
@@ -29,12 +27,7 @@ def configure_termy():
         sheet_id = link_parts[5]
     else:
         sys.exit(INVALID_SHEET_LINK)
-    sheet_name = input(apply_color_and_rest(Fore.LIGHTCYAN_EX,
-                                            "Please enter the Sheet Name for the google sheet that "
-                                            "contains the commands data (Press enter for default : 'Sheet1'): "))
-    if not sheet_name:
-        sheet_name = 'Sheet1'
-    config = {"sheet_id": sheet_id, "sheet_name": sheet_name}
+    config = {"sheet_id": sheet_id, 'sheet_link': sheet_link}
     with open(CONFIG, 'w') as f:
         json.dump(config, f)
     print(apply_color_and_rest(Fore.LIGHTGREEN_EX, f'Configuring Termy...'))
@@ -49,7 +42,7 @@ def update_termy():
             creds = pickle.load(config_dictionary_file)
         with open(CONFIG, 'r') as f:
             config = json.load(f)
-        get_sheet_content_into_csv(config.get("sheet_id"), config.get("sheet_name", SHEET_NAME), creds)
+        get_sheet_content_into_csv(config.get("sheet_id"), creds)
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
 
