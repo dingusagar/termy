@@ -8,7 +8,7 @@ from colorama import Fore
 from rapidfuzz import process, fuzz
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
-    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS
+    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
@@ -112,7 +112,7 @@ def show_configs():
 def load_commands_and_queries():
     try:
         df = pd.read_csv(TERMY_COMMANDS_FILE)
-        commands, queries = list(df['commands']), list(df['query'])
+        commands, queries = list(df[ColNames.COMMANDS]), list(df[ColNames.QUERY])
         final_commands, final_queries = [], []
         for i, query in enumerate(queries):
             query_variations = query.split('\n')
