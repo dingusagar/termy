@@ -8,9 +8,10 @@ from colorama import Fore
 from rapidfuzz import process, fuzz
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, SHEET_NAME, \
-    TERMY_CONFIGURE_MESSAGE, SHEET_ID_INPUT_MESSAGE, SHEET_LINK_INPUT, INVALID_SHEET_LINK
+    TERMY_CONFIGURE_MESSAGE, SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
+from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
 from termy.utils import save_object, apply_color_and_rest
 
 creds = None
@@ -61,13 +62,42 @@ def execute_command(command):
     else:
         os.system(command)
 
+def remove_stopwords(query):
+    tokens = query.split()
+    tokens = [token for token in tokens if not token in STOPWORDS]
+    return ' '.join(tokens)
+
+
+def rank_matches(matches, search_text):
+    highest_score = matches[0][1]
+    if highest_score < MATCH_THRESHOLD: # low threshold, skip reranking
+        return matches[0]
+
+    # reranking logic based on min number of tokens not matched.
+    tokens_not_matched_counts = []
+    for match in matches[:10]:
+        match_score = match[1]
+        if match_score != highest_score:
+            break
+        matched_query = match[0]
+        tokens_not_matched_count = 0
+        for token in matched_query.split():
+            if token not in search_text:
+                tokens_not_matched_count += 1
+        tokens_not_matched_counts.append(tokens_not_matched_count)
+
+    best_match_index = tokens_not_matched_counts.index(min(tokens_not_matched_counts))
+    return matches[best_match_index]
+
 
 def search_and_execute(search_text):
     commands, queries = load_commands_and_queries()
-    match = process.extractOne(search_text, queries, scorer=fuzz.token_set_ratio)
-    if match:
+    search_text = remove_stopwords(search_text)
+    matches = process.extract(search_text, queries, scorer=fuzz.token_set_ratio)
+    if matches:
+        match = rank_matches(matches, search_text)
         match_query, score, index = match
-        if score > MATCH_THRESHOLD:
+        if score >= MATCH_THRESHOLD:
             command = commands[index]
             execute_command(command)
         else:
@@ -89,9 +119,26 @@ def show_configs():
 def load_commands_and_queries():
     try:
         df = pd.read_csv(TERMY_COMMANDS_FILE)
-        return list(df['commands']), list(df['query'])
+        commands, queries = list(df['commands']), list(df['query'])
+        final_commands, final_queries = [], []
+        for i, query in enumerate(queries):
+            query_variations = query.split('\n')
+            query_variations = [variation for variation in query_variations if variation]
+            final_queries.extend(query_variations)
+            final_commands.extend([commands[i]] * len(query_variations))
+        return final_commands, final_queries
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
+
+
+def resolve_command_from_GPT3(query):
+    client = GPT3TerminalClient()
+    command = client.get_command(query)
+    if command:
+        execute_command(command)
+    else:
+        print(apply_color_and_rest(Fore.RED, 'No match found :('))
+
 
 
 if __name__ == '__main__':
