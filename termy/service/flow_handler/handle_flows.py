@@ -135,13 +135,12 @@ def resolve_command_from_GPT3(query):
 
 
 def display_current_configs():
-    config = None
+    if not os.path.exists(CONFIG):
+        print(apply_color_and_rest(Fore.RED, 'No config file found, \nTry termy --configure to configure first'))
+        return
+
     with open(CONFIG, 'r') as f:
         config = json.load(f)
-
-    if not config:
-        print(apply_color_and_rest(Fore.RED,
-                                   'Something Wrong. Could not read the config file :( \nTry termy --configure to configure again'))
 
     print(apply_color_and_rest(Fore.LIGHTCYAN_EX, 'Current configurations'))
     for key, value in config.items():
