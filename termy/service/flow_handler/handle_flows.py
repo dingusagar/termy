@@ -55,6 +55,7 @@ def execute_command(command):
     else:
         os.system(command)
 
+
 def remove_stopwords(query):
     tokens = query.split()
     tokens = [token for token in tokens if not token in STOPWORDS]
@@ -63,7 +64,7 @@ def remove_stopwords(query):
 
 def rank_matches(matches, search_text):
     highest_score = matches[0][1]
-    if highest_score < MATCH_THRESHOLD: # low threshold, skip reranking
+    if highest_score < MATCH_THRESHOLD:  # low threshold, skip reranking
         return matches[0]
 
     # reranking logic based on min number of tokens not matched.
@@ -132,6 +133,19 @@ def resolve_command_from_GPT3(query):
     else:
         print(apply_color_and_rest(Fore.RED, 'No match found :('))
 
+
+def display_current_configs():
+    config = None
+    with open(CONFIG, 'r') as f:
+        config = json.load(f)
+
+    if not config:
+        print(apply_color_and_rest(Fore.RED,
+                                   'Something Wrong. Could not read the config file :( \nTry termy --configure to configure again'))
+
+    print(apply_color_and_rest(Fore.LIGHTCYAN_EX, 'Current configurations'))
+    for key, value in config.items():
+        print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'{key} : {value}'))
 
 
 if __name__ == '__main__':

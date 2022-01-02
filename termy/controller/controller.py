@@ -3,7 +3,7 @@ import sys
 
 from termy.constants import TERMY_INTRO_MESSAGE, VERSION
 from termy.service.flow_handler.handle_flows import configure_termy, search_and_execute, update_termy, \
-    resolve_command_from_GPT3
+    resolve_command_from_GPT3, display_current_configs
 
 DESCRIPTION = TERMY_INTRO_MESSAGE
 
@@ -37,8 +37,8 @@ def init_cli_app():
         update_termy()
     elif args.version:
         print(VERSION)
-    elif args.gpt3:
-        resolve_command_from_GPT3(args.gpt3)
+    elif args.show_config:
+        display_current_configs()
     else:
         parser.print_help(sys.stdout)
 
