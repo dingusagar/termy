@@ -8,9 +8,11 @@ from colorama import Fore
 from rapidfuzz import process, fuzz
 import requests
 from pkg_resources import parse_version
+from datetime import datetime, timedelta
+from dateutil import parser
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
-    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION
+    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION, ConfigKeys
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
@@ -39,11 +41,47 @@ def configure_termy():
 
 
 def check_for_package_updates():
-    response = requests.get(f'https://pypi.org/pypi/{APP_NAME}/json')
-    latest_version = response.json()['info']['version']
-    if parse_version(VERSION) < parse_version(latest_version):
-        print(f'\n{Fore.LIGHTYELLOW_EX}You current termy version is {VERSION}. A new version {latest_version} is available.'
-              f'\nRecommend you to get the latest version by executing the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
+    try:
+        response = requests.get(f'https://pypi.org/pypi/{APP_NAME}/json')
+        latest_version = response.json()['info']['version']
+        if parse_version(VERSION) < parse_version(latest_version):
+            print(f'\n{Fore.LIGHTYELLOW_EX}You current termy version is {VERSION}. A new version {latest_version} is available.'
+                  f'\nRecommend you to get the latest version by executing the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
+    except Exception as e:
+        print(f'{Fore.LIGHTYELLOW_EX}To make sure you have the latest termy version, execute the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
+
+
+def save_last_updated_date(config):
+    config[ConfigKeys.LAST_UPDATED_AT] = datetime.now().isoformat()
+    if not ConfigKeys.CHECK_UPDATE_AFTER in config:
+        config[ConfigKeys.CHECK_UPDATE_AFTER] = 14
+
+    with open(CONFIG, 'w') as f:
+        json.dump(config, f)
+
+    print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Saving configurations at {CONFIG}"))
+
+def periodic_update_prompt():
+    with open(CONFIG, 'r') as f:
+        config = json.load(f)
+
+    last_updated_date = config.get(ConfigKeys.LAST_UPDATED_AT, None)
+    if not last_updated_date:
+        return
+    last_updated_date = parser.parse(last_updated_date)
+    update_period_days = config.get(ConfigKeys.CHECK_UPDATE_AFTER)
+    next_update_date = last_updated_date + timedelta(days=update_period_days)
+    if datetime.now() > next_update_date:
+        response = input(f"{Fore.LIGHTYELLOW_EX} It's been more than {update_period_days} days since you last synced your google sheet. Would you like to update and sync the data? (y/n) : {Fore.RESET}")
+        if response.lower() in ['y', 'yes']:
+            print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Executing update command : termy --update"))
+            update_termy()
+        else:
+            print(apply_color_and_rest(Fore.LIGHTYELLOW_EX, f"Cool, Skipping update. Will ask again in {update_period_days} days. You can change the current settings at {CONFIG}{Fore.RESET}\n\n"))
+            config[ConfigKeys.CHECK_UPDATE_AFTER] = update_period_days * 2
+            with open(CONFIG, 'w') as f:
+                json.dump(config, f)
+
 
 
 def update_termy():
@@ -54,6 +92,7 @@ def update_termy():
             config = json.load(f)
         get_sheet_content_into_csv(config.get("sheet_id"), creds)
         check_for_package_updates()
+        save_last_updated_date(config)
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
 

@@ -3,7 +3,7 @@ import sys
 
 from termy.constants import TERMY_INTRO_MESSAGE, VERSION
 from termy.service.flow_handler.handle_flows import configure_termy, search_and_execute, update_termy, \
-    resolve_command_from_GPT3, display_current_configs
+    resolve_command_from_GPT3, display_current_configs, periodic_update_prompt
 
 DESCRIPTION = TERMY_INTRO_MESSAGE
 
@@ -30,6 +30,7 @@ def init_cli_app():
         resolve_command_from_GPT3(query)
     elif args.search: # regular search query
         query = ' '.join(args.search)
+        periodic_update_prompt()
         search_and_execute(query)
     elif args.configure:
         configure_termy()

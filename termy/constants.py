@@ -6,17 +6,20 @@ import art
 APP_NAME = 'termy'
 TERMY_DIR = Path.home() / APP_NAME
 TERMY_COMMANDS_FILE = TERMY_DIR / 'commands.csv'
+CONFIG = TERMY_DIR / 'config.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 app_root = os.path.dirname(__file__)
 CREDENTIALS_JSON = os.path.join(app_root, 'resources/credentials.json')
 TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
 CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
-CONFIG = os.path.join(app_root, "resources/config.json")
 GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
 VERSION = '0.0.12'
 
+class ConfigKeys:
+    LAST_UPDATED_AT = 'last_updated_at'
+    CHECK_UPDATE_AFTER = 'check_for_update_after(days)'
 
 class ColNames:
     QUERY = 'queries'
