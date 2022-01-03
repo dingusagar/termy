@@ -6,9 +6,11 @@ import sys
 import pandas as pd
 from colorama import Fore
 from rapidfuzz import process, fuzz
+import requests
+from pkg_resources import parse_version
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
-    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames
+    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION
 from termy.service.aunthenticator.authenticate import google_auth_renew
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
@@ -30,10 +32,18 @@ def configure_termy():
     config = {"sheet_id": sheet_id, 'sheet_link': sheet_link}
     with open(CONFIG, 'w') as f:
         json.dump(config, f)
-    print(apply_color_and_rest(Fore.LIGHTGREEN_EX, f'Configuring Termy...'))
+    print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Configuring Termy...'))
     creds = google_auth_renew()
     save_object(creds, CREDS_OBJECT_FILE)
     update_termy()
+
+
+def check_for_package_updates():
+    response = requests.get(f'https://pypi.org/pypi/{APP_NAME}/json')
+    latest_version = response.json()['info']['version']
+    if parse_version(VERSION) < parse_version(latest_version):
+        print(f'\n{Fore.LIGHTYELLOW_EX}You current termy version is {VERSION}. A new version {latest_version} is available.'
+              f'\nRecommend you to get the latest version by executing the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
 
 
 def update_termy():
@@ -43,6 +53,7 @@ def update_termy():
         with open(CONFIG, 'r') as f:
             config = json.load(f)
         get_sheet_content_into_csv(config.get("sheet_id"), creds)
+        check_for_package_updates()
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
 

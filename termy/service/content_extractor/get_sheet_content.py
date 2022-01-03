@@ -49,7 +49,7 @@ def get_sheet_content_into_csv(sheet_id, creds):
             result = sheet_client.values().get(spreadsheetId=sheet_id, range=sheet_name).execute()
             values = result.get('values', [])
             if is_valid_format(values):
-                print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Extracted data from sheet: "{sheet_name}"..'))
+                print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Downloading data from sheet: "{sheet_name}"..'))
                 header, contents = values[0], values[1:]
                 contents = [content for content in contents if content]
                 all_contents.extend(contents) # exclude header and add to global list
