@@ -46,7 +46,7 @@ Usage:
 ```termy --gpt3 <query>```
 
 For eg: 
-termy --gpt3 find files which are bigger than 50MB in my home folder
+`termy --gpt3 find files which are bigger than 50MB in my home folder`
 
 would trigger the command. 
 `find ~/ -size +50M`
