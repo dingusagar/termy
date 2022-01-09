@@ -12,12 +12,14 @@ def init_cli_app():
     parser = argparse.ArgumentParser(add_help=False,
                                      description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
 
-    parser.add_argument('search', help='Input String', nargs='*')
-    parser.add_argument("-c", "--configure", action='store_true', help="Configure your termy")
+    parser.add_argument('search', help='Input query in natural language', nargs='*')
+    parser.add_argument("-c", "--configure", action='store_true',
+                        help="Configure your termy with the google sheet containing commands")
     parser.add_argument("--show-config", action='store_true', help="Shows the current configurations")
-    parser.add_argument("--gpt3", action='store_true', help="Give the query in natural language to get terminal command from GPT-3 API")
+    parser.add_argument("--gpt3", action='store_true',
+                        help="Use GPT-3 API to convert any natural language query into a terminal command")
     parser.add_argument("-u", "--update", action='store_true',
-                        help="Update termy to be updated with the latest commands")
+                        help="Update termy and sync the latest commands from the google sheet")
     parser.add_argument("-v", "--version", action='store_true',
                         help="Version Info")
     args = parser.parse_args()
