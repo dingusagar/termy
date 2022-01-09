@@ -11,6 +11,10 @@ with codecs.open(os.path.join(here, "README.md"), encoding="utf-8") as fh:
 
 DESCRIPTION = 'A lightweight terminal assistant to give a natural language interface to your terminal commands'
 
+project_urls = {
+  'Github': 'https://github.com/dingusagar/termy',
+}
+
 # Setting up
 setup(
     name="termy",
@@ -44,5 +48,6 @@ setup(
     ],
     entry_points={
         'console_scripts': ['termy=termy.controller.controller:init_cli_app'],
-    }
+    },
+    project_urls=project_urls
 )

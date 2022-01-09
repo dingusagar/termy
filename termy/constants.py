@@ -15,7 +15,7 @@ CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
-VERSION = '0.0.15'
+VERSION = '0.0.16'
 
 class ConfigKeys:
     LAST_UPDATED_AT = 'last_updated_at'
