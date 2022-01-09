@@ -10,7 +10,8 @@ DESCRIPTION = TERMY_INTRO_MESSAGE
 
 def init_cli_app():
     parser = argparse.ArgumentParser(add_help=False,
-                                     description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter)
+                                     description=DESCRIPTION, formatter_class=argparse.RawTextHelpFormatter,
+                                     usage=argparse.SUPPRESS)
 
     parser.add_argument('search', help='Input query in natural language', nargs='*')
     parser.add_argument("-c", "--configure", action='store_true',
@@ -22,6 +23,9 @@ def init_cli_app():
                         help="Update termy and sync the latest commands from the google sheet")
     parser.add_argument("-v", "--version", action='store_true',
                         help="Version Info")
+    parser.add_argument("-h", "--help", action='store_true',
+                        help="How to use Termy")
+
     args = parser.parse_args()
 
     if args.gpt3: # gpt3 search query
