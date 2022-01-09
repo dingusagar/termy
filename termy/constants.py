@@ -6,16 +6,27 @@ import art
 APP_NAME = 'termy'
 TERMY_DIR = Path.home() / APP_NAME
 TERMY_COMMANDS_FILE = TERMY_DIR / 'commands.csv'
+CONFIG = TERMY_DIR / 'config.json'
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets.readonly']
 app_root = os.path.dirname(__file__)
 CREDENTIALS_JSON = os.path.join(app_root, 'resources/credentials.json')
 TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
 CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
-CONFIG = os.path.join(app_root, "resources/config.json")
 GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 
-VERSION = '0.0.9'
+VERSION = '0.0.14'
+
+class ConfigKeys:
+    LAST_UPDATED_AT = 'last_updated_at'
+    CHECK_UPDATE_AFTER = 'check_for_update_after(days)'
+
+class ColNames:
+    QUERY = 'queries'
+    COMMANDS = 'commands'
+
+
+SAMPLE_SHEET_LINK = 'https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0'
 
 MATCH_THRESHOLD = 60
 
@@ -32,35 +43,31 @@ by triggering commands just based on the Natural language.
 To get started:
 Configure termy using ''' + Fore.LIGHTGREEN_EX + '''termy --configure .''' + Fore.LIGHTYELLOW_EX + '''This will connect termy to your google sheet containg commands.
 Once configuration is done, you can search using''' + Fore.LIGHTGREEN_EX + ''' termy <search_text> ''' + \
-                      Fore.LIGHTYELLOW_EX + '''\nYou can also visit https://pypi.org/project/termy/ for more details \n\nIf you have any feedbacks on this tool, please use this form : https://forms.gle/8sHNPD9PNyVupFht8
+                      Fore.LIGHTYELLOW_EX + '''\n\n\nYou can also visit https://pypi.org/project/termy/ for more details \n\nIf you have any feedbacks on this tool, please use this form : https://forms.gle/8sHNPD9PNyVupFht8
 You can also visit our github page and raise issues there. : https://github.com/dingusagar/termy
 '''
 AUTHENTICATE_ERROR = "Failed to authenticate google sheets integration"
 
-SHEET_ID_INPUT_MESSAGE = f'''{Fore.LIGHTCYAN_EX}
-Termy needs the sheet id of your google sheet link.
-
-How to find your sheet id ?
-Sheet id for the following sample sheet is the highlighted part : https://docs.google.com/spreadsheets/d/{Back.WHITE}{Fore.BLACK}1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI{Back.RESET}{Fore.LIGHTCYAN_EX}/edit#gid=0  
-
-Enter the Sheet ID for your google sheet : {Fore.RESET}'''
-
 SHEET_LINK_INPUT = f'''{Fore.LIGHTCYAN_EX}
 Termy needs the google sheet link where the commands and queries are stored.
 
-Your google sheet should follow the same format as this sample sheet : https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0  
+Your google sheet should follow the same format as this sample sheet : {SAMPLE_SHEET_LINK} 
 
 Paste your google sheet link here : {Fore.RESET}'''
 
 INVALID_SHEET_LINK = f'''{Fore.RED}Invalid Sheet Link.
-Google sheet link should look something like this : https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit#gid=0
+Google sheet link should look something like this : {SAMPLE_SHEET_LINK}
 Try again with the proper sheet link. {Fore.RESET}'''
+
+EMPTY_SHEET_MESSAGE = f'''{Fore.RED}Did not find valid data in the sheet.
+Please refer to the sample sheet and add contents to your sheet in the same format
+Sample sheet : {SAMPLE_SHEET_LINK} {Fore.RESET}
+'''
 
 GPT3_API_KEY_INPUT = f'''{Fore.LIGHTCYAN_EX}
 Need API Key for querying to GPT-3. If you dont have one, sign up for an account and get it by clicking the link here https://beta.openai.com/account/api-keys 
 
 API KEY :{Fore.RESET} '''
-
 
 STOPWORDS = {'plz', 'pls', 'want', 'can', 'you', 'get', 'check', 'the', 'a', 'able', 'about', 'above', 'abst',
              'accordance', 'according', 'accordingly', 'across', 'act', 'actually', 'added', 'adj', 'affected',
