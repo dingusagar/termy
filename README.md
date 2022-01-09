@@ -40,8 +40,7 @@ This will sync the contents of the google sheet in your local system. Execute th
 Termy GPT-3 Integration
 =============
 
-Termy has a feature to connect with GPT-3 API. Using GPT-3, you can convert any natural language query into 
-a terminal command. 
+Termy has a feature to connect with GPT-3 API. Using GPT-3, you can convert any natural language query into a terminal command. For this feature, you would need to sign up for the GPT-3 API KEY. Refer [here](https://beta.openai.com/signup) for getting a free API Key.  
 
 Usage: 
 ```termy --gpt3 <query>```
