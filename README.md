@@ -50,3 +50,9 @@ For eg:
 
 would trigger the command. 
 `find ~/ -size +50M`
+
+
+Contribute and Make it better
+=============
+
+Any form of contribution is welcome. From finding and reporting bugs to giving feedback to suggesting cool features to building out cool features. Check out [CONTRIBUTING.md](https://github.com/dingusagar/termy/blob/master/CONTRIBUTING.md) for more details. 
