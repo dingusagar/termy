@@ -16,7 +16,7 @@ GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
 GITHUB_ISSUES_URL = "https://github.com/dingusagar/termy/issues"
 
-VERSION = '0.0.16'
+VERSION = '0.0.17'
 
 class ConfigKeys:
     LAST_UPDATED_AT = 'last_updated_at'

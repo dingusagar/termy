@@ -39,7 +39,7 @@ setup(
     ],
     keywords=['python', 'termy', 'terminal assistant', 'terminast', 'terminal alias', 'command automation'],
     classifiers=[
-        "Development Status :: 3 - Alpha",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Programming Language :: Python :: 3",
         "Operating System :: Unix",
