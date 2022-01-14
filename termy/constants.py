@@ -14,12 +14,16 @@ TOKEN_JSON = os.path.join(app_root, 'resources/tokens.json')
 CREDS_OBJECT_FILE = os.path.join(app_root, "resources/creds.pkl")
 GPT3_CONFIG = os.path.join(app_root, "resources/gpt3_config.json")
 SHEET_NAME = "Sheet1"
+GITHUB_ISSUES_URL = "https://github.com/dingusagar/termy/issues"
 
 VERSION = '0.0.16'
 
 class ConfigKeys:
     LAST_UPDATED_AT = 'last_updated_at'
     CHECK_UPDATE_AFTER = 'check_for_update_after(days)'
+    AUTH_REQUIRED = 'auth_required'
+    SHEET_ID = 'sheet_id'
+    SHEET_LINK = 'sheet_link'
 
 class ColNames:
     QUERY = 'queries'
@@ -34,6 +38,25 @@ TERMY_CONFIGURE_MESSAGE = Fore.RED + "Termy is not yet configured \n" + Fore.YEL
                           "Please configure it using " + Fore.GREEN + "termy --configure"
 SERVER_ERROR = Fore.RED + "Unable to find the server at sheets.googleapis.com. Please check your connection!"
 HTPP_SHEET_ERROR = Fore.RED + "Sheet could not be parsed. Please check if Sheet ID and Sheet Name is correct"
+
+AUTHENTICATION_FAILED_ON_UPDATE_ERROR = f'''{Fore.RED}
+Failed to authenticate to your google sheet for updating data. 
+Make sure you are trying to login with the account that has access to the google sheet. 
+Try {Fore.GREEN} termy --configure {Fore.RED} again 
+{Fore.RESET}
+'''
+
+SHEET_NOT_FOUND_ERROR = f'''{Fore.RED}
+Could not find the google sheet. Please recheck the sheet url you gave.
+Try {Fore.GREEN} termy --configure {Fore.RED} again 
+{Fore.RESET}
+'''
+
+UNKNOWN_EXCEPTION_ERROR = f'''{Fore.RED}
+Oops..Something went wrong. Please raise an issue here {GITHUB_ISSUES_URL} with the details of the error message. We will get back to you.
+{Fore.RESET}
+'''
+
 TERMY_BANNER = art.text2art("Termy")
 TERMY_INTRO_MESSAGE = Fore.LIGHTYELLOW_EX + f'''
 {TERMY_BANNER}
@@ -68,6 +91,15 @@ GPT3_API_KEY_INPUT = f'''{Fore.LIGHTCYAN_EX}
 Need API Key for querying to GPT-3. If you dont have one, sign up for an account and get it by clicking the link here https://beta.openai.com/account/api-keys 
 
 API KEY :{Fore.RESET} '''
+
+
+GOOGLE_AUTH_PROMPT_ON_UNAUTHORISED_SHEET = f'''{Fore.LIGHTCYAN_EX}
+The google sheet you provided does not have public read access.
+You can either modify the sharing permission on the sheet by selecting 'Anyone with the link' option and giving view access.
+Or you can authenticate termy with your google account to access the sheet. 
+
+Proceed with Google Authentication (y/n) : 
+{Fore.RESET}'''
 
 STOPWORDS = {'plz', 'pls', 'want', 'can', 'you', 'get', 'check', 'the', 'a', 'able', 'about', 'above', 'abst',
              'accordance', 'according', 'accordingly', 'across', 'act', 'actually', 'added', 'adj', 'affected',
