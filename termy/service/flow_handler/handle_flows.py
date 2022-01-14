@@ -11,6 +11,8 @@ import requests
 from pkg_resources import parse_version
 from datetime import datetime, timedelta
 from dateutil import parser
+import traceback
+
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
     SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION, ConfigKeys, \
@@ -59,7 +61,7 @@ def configure_termy():
     except ServerNotFoundError:
         sys.exit(SERVER_ERROR)
     except (UnknownException, Exception) as err:
-        print(err)
+        traceback.print_exc()
         sys.exit(UNKNOWN_EXCEPTION_ERROR)
 
 
@@ -134,7 +136,7 @@ def update_termy():
     except ServerNotFoundError:
         sys.exit(SERVER_ERROR)
     except (UnknownException, Exception) as err:
-        print(err)
+        traceback.print_exc()
         sys.exit(UNKNOWN_EXCEPTION_ERROR)
 
 

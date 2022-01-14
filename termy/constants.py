@@ -53,7 +53,8 @@ Try {Fore.GREEN} termy --configure {Fore.RED} again
 '''
 
 UNKNOWN_EXCEPTION_ERROR = f'''{Fore.RED}
-Oops..Something went wrong. Please raise an issue here {GITHUB_ISSUES_URL} with the details of the error message. We will get back to you.
+Oops..Something went wrong. Try {Fore.GREEN} termy --configure {Fore.RED} again.
+If it does't help please raise an issue here {GITHUB_ISSUES_URL} with the details of the error message. We will get back to you.
 {Fore.RESET}
 '''
 
