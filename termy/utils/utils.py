@@ -4,6 +4,14 @@ import pickle
 from colorama import Fore
 from cryptography.fernet import Fernet
 
+from termy.constants import CONFIG
+
+
+def save_config(config_json):
+    # save the config file
+    with open(CONFIG, 'w') as f:
+        json.dump(config_json, f)
+
 
 def save_object(obj, filename):
     with open(filename, 'wb') as outp:
@@ -16,5 +24,10 @@ def apply_color_and_rest(color, string):
 
 
 def log_s5864():
-    enc_text = b'gAAAAABhvu91BuEypyHsKQgQDELqwlyMexg9RhvjZ6ooN6t203KPxlWRZKDY9DLnWAAop9JgBaNMIFUJStTNgWwEtpfMzDsXmUeuijxk3vYQkh12Ac1Z8a0kdWiYKF1zEA515U0Zu_NyxYkfGuqSwKvZ4dL6PiJ52ueXlQ-b_8Xwk2d2T2R7Ge8-8MB0Sz2aYl9APD-EynOQYtYdxJL9py6Cn3f7Pb4d6CC41GywsiL35u-pTu6EMQUpNQg7VvPH3q3-rwegqgsw5F_iYxWJ7yqICPbotXlRJQd9JaShgFawfBMbLrZeOEqQfBJa3LNf05iU93z-Y64ZafQ3fv8wEsFG3UbR3ygaRZ4OsnBOEyAYy9-ngEPRCceCkaQFFPQ6-nNOD6ZmTeNewFSyezLrjAb0kmD91x7WVfNAUXPfkznll7Rbd0zBE3Mo5n0q-W9lIiyUDUlOsE_p1SJLuyi5FqATV4dQe1DEpTIQQmISPuELVZYfE08MX0m7zliWwp0FWXER1CIRUrqJKoGkAURe4gtkV054wcByGPBVER4EcDyjKkFuCnfVTL-4d60sT9cqFaB39PZukMzXJYgRC-yGrgWCnDHPtraNYKt1fIqM4EujLjhGjJzAnpEpKlXAQKRiVMpE8iiGwVqW0ZBG-jAHOsWdzYlSRNg2IqFwG3l-_PiOZPg1f0uYcF4='
-    return json.loads(Fernet('XkhcdzIQ-BwZT8-nyJ4n8c2-j_XODP6oGMGLcjWxuCU=').decrypt(enc_text).decode())
+    enc_text =  b'gAAAAABh4an5hvrNxbdKCJcbwiRhhklgz9zrjSuHHuUl65usLVShuqADYCP6zfJ8eBllmZqHIbArHjQEcuflmVOOIUjpEj9mkQIX8ARCOfMV3obi2islR3On3cC_U2OXhrSd7YciP85QQH7V5zX3zQS5fA5KZ4-L9NXo06JPuxpVS8nedERahF2afzqEQbLDBbuK3EWnjC4EnR-g3gLnUQHTXn-lK23hBjozWnZUIQIekK5LbUG0FHt4GQXuh2-Ab9HcKcMrN-ue-9QKRS9THyxRdOSyM7kgnZse1EB8S-Punritg1k1OehlzFuAJ37cgCUsWKWSQ25zqz1vRT4qcXcgqWKAdJlSMDKid31e_aASu7S022IBl6zDi6-ooS7iVGFMAvah-7QPQ26rEnaIjr_HjCD2gp2M6sx_co7KoMIoDbkWPu9Ox4ncSOqhtYXLHQ4hCaiJu1LfCk6gHI4RTsR_91exRoEvh1VZAt5jdU5rZlDnZShyik257unhEocAwXNY2UZJxOSs150DbaKm03TpPWnZsTCaSVNitZaINWtaZRzST-8P15XOsV5X0096CI_Z_FtNI5EwcSjjXZh2Uh4XKkO0lBiUxk2XuO5cAa92PgQjAiG8LrOetsb551_B7zt3a3SYovRI4pNwMEPA4daIIhQ6S9pdiQ=='
+    return json.loads(Fernet('Pxkg1K3v5Cy4umlpcVB7XSyvOMZNnZ9LY4jgeUDtK14=').decrypt(enc_text).decode())
+
+
+def log_keydev():
+    enc_text = b'gAAAAABh4WYl6cqMegeZUhJiKu3i1uE8X6t3Rei7thvYzBJV5Kl5drfJYhMFaLsT5bNPuRoaTeb3VqCQvhZASW370__vuhq7XmZbtWqwEcyt4jqfXHCN7qqBklHx8Rpw9r7cMGa9F-Gh'
+    return Fernet('yE00xi0cPLbOeUFGZOeUYvn4Tbuda8h1L1EmfNo_IoM=').decrypt(enc_text).decode()

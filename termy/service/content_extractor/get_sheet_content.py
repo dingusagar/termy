@@ -2,11 +2,9 @@ import csv
 import os.path
 
 from colorama import Fore
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
-from httplib2 import ServerNotFoundError
 
-from termy.constants import TERMY_COMMANDS_FILE, SERVER_ERROR, HTPP_SHEET_ERROR, ColNames, EMPTY_SHEET_MESSAGE
+from termy.constants import TERMY_COMMANDS_FILE, ColNames, EMPTY_SHEET_MESSAGE
+from termy.service.aunthenticator.authenticate import connect_to_google_sheet
 from termy.utils import apply_color_and_rest
 
 
@@ -31,40 +29,31 @@ def save_to_csv(all_contents, header):
 
 
 def get_sheet_content_into_csv(sheet_id, creds):
-    try:
-        service = build('sheets', 'v4', credentials=creds)
+    sheet_client, sheet_metadata = connect_to_google_sheet(sheet_id, creds)
+    sheets = sheet_metadata.get('sheets', '')
+    sheet_names = [sheet['properties']['title'] for sheet in sheets]
 
-        sheet_client = service.spreadsheets()
-        sheet_metadata = service.spreadsheets().get(spreadsheetId=sheet_id).execute()
-        sheets = sheet_metadata.get('sheets', '')
-        sheet_names = [sheet['properties']['title'] for sheet in sheets]
+    if not sheet_names:
+        print(apply_color_and_rest(Fore.RED, 'No data found :('))
+        return
 
-        if not sheet_names:
-            print(apply_color_and_rest(Fore.RED, 'No data found :('))
-            return
-
-        all_contents = []
-        header = None
-        for sheet_name in sheet_names:
-            result = sheet_client.values().get(spreadsheetId=sheet_id, range=sheet_name).execute()
-            values = result.get('values', [])
-            if is_valid_format(values):
-                print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Downloading data from sheet: "{sheet_name}"..'))
-                header, contents = values[0], values[1:]
-                contents = [content for content in contents if content]
-                all_contents.extend(contents) # exclude header and add to global list
-            else:
-                print(apply_color_and_rest(Fore.RED, f'Invalid format in sheet: "{sheet_name}". Skipping..'))
-
-        if os.path.exists(TERMY_COMMANDS_FILE) and os.path.isfile(TERMY_COMMANDS_FILE):
-            os.remove(TERMY_COMMANDS_FILE)
-        if all_contents:
-            save_to_csv(all_contents, header)
-            print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Saving data at {TERMY_COMMANDS_FILE}'))
+    all_contents = []
+    header = None
+    for sheet_name in sheet_names:
+        result = sheet_client.values().get(spreadsheetId=sheet_id, range=sheet_name).execute()
+        values = result.get('values', [])
+        if is_valid_format(values):
+            print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Downloading data from sheet: "{sheet_name}"..'))
+            header, contents = values[0], values[1:]
+            contents = [content for content in contents if content]
+            all_contents.extend(contents) # exclude header and add to global list
         else:
-            print(EMPTY_SHEET_MESSAGE)
+            print(apply_color_and_rest(Fore.RED, f'Invalid format in sheet: "{sheet_name}". Skipping..'))
 
-    except ServerNotFoundError as err:
-        print(SERVER_ERROR)
-    except HttpError as err:
-        print(HTPP_SHEET_ERROR)
+    if os.path.exists(TERMY_COMMANDS_FILE) and os.path.isfile(TERMY_COMMANDS_FILE):
+        os.remove(TERMY_COMMANDS_FILE)
+    if all_contents:
+        save_to_csv(all_contents, header)
+        print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Saving data at {TERMY_COMMANDS_FILE}'))
+    else:
+        print(EMPTY_SHEET_MESSAGE)
