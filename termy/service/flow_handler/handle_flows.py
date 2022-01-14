@@ -90,27 +90,34 @@ def save_last_updated_date(config):
 
 
 def periodic_update_prompt():
-    with open(CONFIG, 'r') as f:
-        config = json.load(f)
+    try:
+        if not os.path.exists(CONFIG):
+            sys.exit(TERMY_CONFIGURE_MESSAGE)
+        with open(CONFIG, 'r') as f:
+            config = json.load(f)
 
-    last_updated_date = config.get(ConfigKeys.LAST_UPDATED_AT, None)
-    if not last_updated_date:
-        return
-    last_updated_date = parser.parse(last_updated_date)
-    update_period_days = config.get(ConfigKeys.CHECK_UPDATE_AFTER)
-    next_update_date = last_updated_date + timedelta(days=update_period_days)
-    if datetime.now() > next_update_date:
-        response = input(
-            f"{Fore.LIGHTYELLOW_EX} It's been more than {update_period_days} days since you last synced your google sheet. Would you like to update and sync the data? (y/n) : {Fore.RESET}")
-        if response.lower() in ['y', 'yes']:
-            print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Executing update command : termy --update"))
-            update_termy()
-        else:
-            print(apply_color_and_rest(Fore.LIGHTYELLOW_EX,
-                                       f"Cool, Skipping update. Will ask again in {update_period_days} days. You can change the current settings at {CONFIG}{Fore.RESET}\n\n"))
-            config[ConfigKeys.CHECK_UPDATE_AFTER] = update_period_days * 2
-            with open(CONFIG, 'w') as f:
-                json.dump(config, f)
+        last_updated_date = config.get(ConfigKeys.LAST_UPDATED_AT, None)
+        if not last_updated_date:
+            return
+        last_updated_date = parser.parse(last_updated_date)
+        update_period_days = config.get(ConfigKeys.CHECK_UPDATE_AFTER)
+        next_update_date = last_updated_date + timedelta(days=update_period_days)
+        if datetime.now() > next_update_date:
+            response = input(
+                f"{Fore.LIGHTYELLOW_EX} It's been more than {update_period_days} days since you last synced your google sheet. Would you like to update and sync the data? (y/n) : {Fore.RESET}")
+            if response.lower() in ['y', 'yes']:
+                print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Executing update command : termy --update"))
+                update_termy()
+            else:
+                print(apply_color_and_rest(Fore.LIGHTYELLOW_EX,
+                                           f"Cool, Skipping update. Will ask again in {update_period_days} days. You can change the auto update settings by changing 'check_for_update_after' field in {CONFIG}{Fore.RESET}\n\n"))
+                config[ConfigKeys.CHECK_UPDATE_AFTER] = update_period_days * 2
+                with open(CONFIG, 'w') as f:
+                    json.dump(config, f)
+
+    except Exception as e:
+        traceback.print_exc()
+        sys.exit(UNKNOWN_EXCEPTION_ERROR)
 
 
 def update_termy():
