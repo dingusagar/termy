@@ -5,6 +5,7 @@ import sys
 
 import pandas as pd
 from colorama import Fore
+from httplib2 import ServerNotFoundError
 from rapidfuzz import process, fuzz
 import requests
 from pkg_resources import parse_version
@@ -12,32 +13,54 @@ from datetime import datetime, timedelta
 from dateutil import parser
 
 from termy.constants import TERMY_COMMANDS_FILE, MATCH_THRESHOLD, CREDS_OBJECT_FILE, CONFIG, TERMY_CONFIGURE_MESSAGE, \
-    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION, ConfigKeys
-from termy.service.aunthenticator.authenticate import google_auth_renew
+    SHEET_LINK_INPUT, INVALID_SHEET_LINK, STOPWORDS, ColNames, APP_NAME, VERSION, ConfigKeys, \
+    GOOGLE_AUTH_PROMPT_ON_UNAUTHORISED_SHEET, SERVER_ERROR, AUTHENTICATION_FAILED_ON_UPDATE_ERROR, \
+    SHEET_NOT_FOUND_ERROR, UNKNOWN_EXCEPTION_ERROR
+from termy.exception.custom_exceptions import GoogleSheetAuthRequiredException, GoogleSheetNotFoundException, \
+    UnknownException
+from termy.service.aunthenticator.authenticate import google_auth_renew, connect_to_google_sheet
 from termy.service.content_extractor.get_sheet_content import get_sheet_content_into_csv
 from termy.service.gpt_client.gpt3_terminal_client import GPT3TerminalClient
-from termy.utils import save_object, apply_color_and_rest
+from termy.utils import save_object, apply_color_and_rest, save_config
 
-creds = None
-sheet_id = None
+
+def extract_sheet_id(sheet_link):
+    link_parts = sheet_link.split('/')
+    if len(link_parts) >= 5:
+        return link_parts[5]
+    return None
 
 
 def configure_termy():
-    global creds
-    global sheet_id
+    print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Configuring Termy...\n'))
+
     sheet_link = input(SHEET_LINK_INPUT)
-    link_parts = sheet_link.split('/')
-    if len(link_parts) >= 5:
-        sheet_id = link_parts[5]
-    else:
+    sheet_id = extract_sheet_id(sheet_link)
+    if not sheet_id:
         sys.exit(INVALID_SHEET_LINK)
-    config = {"sheet_id": sheet_id, 'sheet_link': sheet_link}
-    with open(CONFIG, 'w') as f:
-        json.dump(config, f)
-    print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f'Configuring Termy...'))
-    creds = google_auth_renew()
-    save_object(creds, CREDS_OBJECT_FILE)
-    update_termy()
+
+    config = {ConfigKeys.SHEET_ID: sheet_id, ConfigKeys.SHEET_LINK: sheet_link}
+
+    try:
+        connect_to_google_sheet(sheet_id)
+        config[ConfigKeys.AUTH_REQUIRED] = False
+        save_config(config)
+        update_termy()
+    except GoogleSheetAuthRequiredException:
+        auth_prompt_response = input(GOOGLE_AUTH_PROMPT_ON_UNAUTHORISED_SHEET)
+        if auth_prompt_response.lower() in ['y', 'yes']:
+            creds = google_auth_renew()
+            save_object(creds, CREDS_OBJECT_FILE)
+            config[ConfigKeys.AUTH_REQUIRED] = True
+            save_config(config)
+            update_termy()
+    except GoogleSheetNotFoundException:
+        sys.exit(SHEET_NOT_FOUND_ERROR)
+    except ServerNotFoundError:
+        sys.exit(SERVER_ERROR)
+    except (UnknownException, Exception) as err:
+        print(err)
+        sys.exit(UNKNOWN_EXCEPTION_ERROR)
 
 
 def check_for_package_updates():
@@ -45,10 +68,12 @@ def check_for_package_updates():
         response = requests.get(f'https://pypi.org/pypi/{APP_NAME}/json')
         latest_version = response.json()['info']['version']
         if parse_version(VERSION) < parse_version(latest_version):
-            print(f'\n{Fore.LIGHTYELLOW_EX}You current termy version is {VERSION}. A new version {latest_version} is available.'
-                  f'\nRecommend you to get the latest version by executing the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
+            print(
+                f'\n{Fore.LIGHTYELLOW_EX}You current termy version is {VERSION}. A new version {latest_version} is available.'
+                f'\nRecommend you to get the latest version by executing the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
     except Exception as e:
-        print(f'{Fore.LIGHTYELLOW_EX}To make sure you have the latest termy version, execute the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
+        print(
+            f'{Fore.LIGHTYELLOW_EX}To make sure you have the latest termy version, execute the command {Fore.LIGHTGREEN_EX}pip install -U termy {Fore.RESET}')
 
 
 def save_last_updated_date(config):
@@ -61,6 +86,7 @@ def save_last_updated_date(config):
 
     print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Saving configurations at {CONFIG}"))
 
+
 def periodic_update_prompt():
     with open(CONFIG, 'r') as f:
         config = json.load(f)
@@ -72,29 +98,44 @@ def periodic_update_prompt():
     update_period_days = config.get(ConfigKeys.CHECK_UPDATE_AFTER)
     next_update_date = last_updated_date + timedelta(days=update_period_days)
     if datetime.now() > next_update_date:
-        response = input(f"{Fore.LIGHTYELLOW_EX} It's been more than {update_period_days} days since you last synced your google sheet. Would you like to update and sync the data? (y/n) : {Fore.RESET}")
+        response = input(
+            f"{Fore.LIGHTYELLOW_EX} It's been more than {update_period_days} days since you last synced your google sheet. Would you like to update and sync the data? (y/n) : {Fore.RESET}")
         if response.lower() in ['y', 'yes']:
             print(apply_color_and_rest(Fore.LIGHTCYAN_EX, f"Executing update command : termy --update"))
             update_termy()
         else:
-            print(apply_color_and_rest(Fore.LIGHTYELLOW_EX, f"Cool, Skipping update. Will ask again in {update_period_days} days. You can change the current settings at {CONFIG}{Fore.RESET}\n\n"))
+            print(apply_color_and_rest(Fore.LIGHTYELLOW_EX,
+                                       f"Cool, Skipping update. Will ask again in {update_period_days} days. You can change the current settings at {CONFIG}{Fore.RESET}\n\n"))
             config[ConfigKeys.CHECK_UPDATE_AFTER] = update_period_days * 2
             with open(CONFIG, 'w') as f:
                 json.dump(config, f)
 
 
-
 def update_termy():
     try:
-        with open(CREDS_OBJECT_FILE, 'rb') as config_dictionary_file:
-            creds = pickle.load(config_dictionary_file)
         with open(CONFIG, 'r') as f:
             config = json.load(f)
-        get_sheet_content_into_csv(config.get("sheet_id"), creds)
+
+        auth_creds = None
+        if config.get(ConfigKeys.AUTH_REQUIRED, False):
+            with open(CREDS_OBJECT_FILE, 'rb') as config_dictionary_file:
+                auth_creds = pickle.load(config_dictionary_file)
+
+        sheet_id = config.get(ConfigKeys.SHEET_ID)
+        get_sheet_content_into_csv(sheet_id=sheet_id, creds=auth_creds)
         check_for_package_updates()
         save_last_updated_date(config)
     except FileNotFoundError as e:
         sys.exit(TERMY_CONFIGURE_MESSAGE)
+    except GoogleSheetAuthRequiredException:
+        sys.exit(AUTHENTICATION_FAILED_ON_UPDATE_ERROR)
+    except GoogleSheetNotFoundException:
+        sys.exit(SHEET_NOT_FOUND_ERROR)
+    except ServerNotFoundError:
+        sys.exit(SERVER_ERROR)
+    except (UnknownException, Exception) as err:
+        print(err)
+        sys.exit(UNKNOWN_EXCEPTION_ERROR)
 
 
 def execute_command(command):
