@@ -20,7 +20,9 @@ How to Use Termy
 ### Step 1: Configure Termy
 ```termy --configure```
 
-You will be asked to give the link of the google sheet containing the commands and queries. After that it will authenticate with your google account to access the sheet. [This](https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit?usp=sharing) is a sample sheet for reference, follow the same format while you create your google sheet.
+You will be asked to give the link of the google sheet containing the commands and queries. After that it will authenticate with your google account to access the sheet in case it is a protected file. [This](https://docs.google.com/spreadsheets/d/1-wtkODsgt0EJzARAo7BBNOXwkd1W3vDiPH1HZoyskXI/edit?usp=sharing) is a sample sheet for reference, follow the same format while you create your google sheet.
+
+>Note: If your google sheet already has the sharing settings set to allow view access for anyone on the internet, termy would not ask for google authentication since it is not required. 
 
 ### Step 2: Search commands using Termy
 ```temry <search query>```
