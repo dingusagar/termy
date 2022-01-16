@@ -1,4 +1,4 @@
-Termy : Your Terminal Assistant
+Termy : Terminal Assistant For Teams
 =========
 A lightweight terminal assistant to give a natural language interface to your terminal commands. It allows you to authenticate and connect to a google sheet that has all the frequently used commands and their natural language queries. This way all the members of the organisation can connect to this central repository and easily manage the configured commands. Termy also has a interface with [GPT-3](https://openai.com/blog/openai-api/) from OpenAI.
 
